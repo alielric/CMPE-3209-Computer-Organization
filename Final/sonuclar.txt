@@ -1,0 +1,16 @@
+== asm_O0.txt
+Ic = 6478 {'ALU': 3167, 'Branch/jump': 631, 'Store': 884, 'Load': 1612, 'Mul/Div': 184} exit 0 gp 0x12000 data refs 2496
+== asm_O1.txt
+Ic = 1905 {'ALU': 926, 'Branch/jump': 347, 'Store': 228, 'Load': 220, 'Mul/Div': 184} exit 0 gp 0x11eb8 data refs 448
+== asm_v2_O0.txt
+Ic = 6478 {'ALU': 3167, 'Branch/jump': 631, 'Store': 884, 'Load': 1612, 'Mul/Div': 184} exit 0 gp 0x12000 data refs 2496
+
+== Cache (256 B)
+trace.csv line=16 ways=1: refs=2496 hits=2347 misses=149 H=0.9403 writebacks=89 dirty_at_end=11
+trace.csv line=16 ways=2: refs=2496 hits=2447 misses=49 H=0.9804 writebacks=27 dirty_at_end=10
+trace.csv line=16 ways=4: refs=2496 hits=2452 misses=44 H=0.9824 writebacks=25 dirty_at_end=11
+trace.csv line=16 ways=16: refs=2496 hits=2451 misses=45 H=0.9820 writebacks=26 dirty_at_end=11
+trace.csv line=8 ways=1: refs=2496 hits=2358 misses=138 H=0.9447 writebacks=73 dirty_at_end=25
+trace.csv line=32 ways=1: refs=2496 hits=2310 misses=186 H=0.9255 writebacks=112 dirty_at_end=5
+trace.csv line=64 ways=1: refs=2496 hits=2153 misses=343 H=0.8626 writebacks=207 dirty_at_end=2
+trace_v2.csv line=16 ways=1: refs=2496 hits=2400 misses=96 H=0.9615 writebacks=50 dirty_at_end=12

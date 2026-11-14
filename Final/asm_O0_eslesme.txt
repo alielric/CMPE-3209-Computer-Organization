@@ -1,0 +1,203 @@
+# CMPE3209 M2 — -O0 assembly listesi (Ripes, riscv64-unknown-elf-gcc 8.3.0, -march=rv32im -mabi=ilp32 -O0)
+# Ali Paşaoğlu, 5001230022. Sağdaki yorumlar her instruction'ın ait olduğu C satırını gösterir (main.c).
+
+
+00010144 <lcg_next>:
+                                                # --- C 8–10: lcg_next(x) gövdesi: return 1664525u*x + 1013904223u
+    10144:        fe010113        addi x2 x2 -32
+    10148:        00812e23        sw x8 28 x2
+    1014c:        02010413        addi x8 x2 32
+    10150:        fea42623        sw x10 -20 x8
+    10154:        fec42703        lw x14 -20 x8
+    10158:        001967b7        lui x15 0x196
+    1015c:        60d78793        addi x15 x15 1549
+    10160:        02f70733        mul x14 x14 x15
+    10164:        3c6ef7b7        lui x15 0x3c6ef
+    10168:        35f78793        addi x15 x15 863
+    1016c:        00f707b3        add x15 x14 x15
+    10170:        00078513        addi x10 x15 0
+    10174:        01c12403        lw x8 28 x2
+    10178:        02010113        addi x2 x2 32
+    1017c:        00008067        jalr x0 x1 0
+
+00010180 <rotl1>:
+                                                # --- C 12–14: rotl1(c) gövdesi: (c << 1) | (c >> 31)
+    10180:        fe010113        addi x2 x2 -32
+    10184:        00812e23        sw x8 28 x2
+    10188:        02010413        addi x8 x2 32
+    1018c:        fea42623        sw x10 -20 x8
+    10190:        fec42783        lw x15 -20 x8
+    10194:        00179713        slli x14 x15 1
+    10198:        01f7d793        srli x15 x15 31
+    1019c:        00e7e7b3        or x15 x15 x14
+    101a0:        00078513        addi x10 x15 0
+    101a4:        01c12403        lw x8 28 x2
+    101a8:        02010113        addi x2 x2 32
+    101ac:        00008067        jalr x0 x1 0
+
+000101b0 <main>:
+                                                # --- C 16: int main(void) {
+    101b0:        fd010113        addi x2 x2 -48
+    101b4:        02112623        sw x1 44 x2
+    101b8:        02812423        sw x8 40 x2
+    101bc:        03010413        addi x8 x2 48
+                                                # --- C 17: const int SID = 706262726;
+    101c0:        2a18b7b7        lui x15 0x2a18b
+    101c4:        6c678793        addi x15 x15 1734
+    101c8:        fcf42e23        sw x15 -36 x8
+                                                # --- C 18: int key = SID % 256;
+    101cc:        fdc42703        lw x14 -36 x8
+    101d0:        41f75793        srai x15 x14 31
+    101d4:        0187d793        srli x15 x15 24
+    101d8:        00f70733        add x14 x14 x15
+    101dc:        0ff77713        andi x14 x14 255
+    101e0:        40f707b3        sub x15 x14 x15
+    101e4:        fef42623        sw x15 -20 x8
+                                                # --- C 19: if (key == 0)
+    101e8:        fec42783        lw x15 -20 x8
+    101ec:        00079663        bne x15 x0 12
+                                                # --- C 20: key = 0xA5;
+    101f0:        0a500793        addi x15 x0 165
+    101f4:        fef42623        sw x15 -20 x8
+                                                # --- C 21: unsigned int x = SID;
+    101f8:        fdc42783        lw x15 -36 x8
+    101fc:        fef42423        sw x15 -24 x8
+                                                # --- C 23: for (i = 0; i < N; i++) — 1. geçiş
+    10200:        fe042223        sw x0 -28 x8
+    10204:        0440006f        jal x0 68
+                                                # --- C 24: x = lcg_next(x);
+    10208:        fe842503        lw x10 -24 x8
+    1020c:        f39ff0ef        jal x1 -200 <lcg_next>
+    10210:        fea42423        sw x10 -24 x8
+                                                # --- C 25: msg[i] = (int)((x >> 16) % 26) + 65;
+    10214:        fe842783        lw x15 -24 x8
+    10218:        0107d713        srli x14 x15 16
+    1021c:        01a00793        addi x15 x0 26
+    10220:        02f777b3        remu x15 x14 x15
+    10224:        04178713        addi x14 x15 65
+    10228:        c5418693        addi x13 x3 -940
+    1022c:        fe442783        lw x15 -28 x8
+    10230:        00279793        slli x15 x15 2
+    10234:        00f687b3        add x15 x13 x15
+    10238:        00e7a023        sw x14 0 x15
+                                                # --- C 23: for (i = 0; i < N; i++) — 1. geçiş
+    1023c:        fe442783        lw x15 -28 x8
+    10240:        00178793        addi x15 x15 1
+    10244:        fef42223        sw x15 -28 x8
+    10248:        fe442703        lw x14 -28 x8
+    1024c:        02d00793        addi x15 x0 45
+    10250:        fae7dce3        bge x15 x14 -72
+                                                # --- C 27: for (…) — 2. geçiş (şifrele)
+    10254:        fe042223        sw x0 -28 x8
+    10258:        0400006f        jal x0 64
+                                                # --- C 28: msg[i] = msg[i] ^ key;
+    1025c:        c5418713        addi x14 x3 -940
+    10260:        fe442783        lw x15 -28 x8
+    10264:        00279793        slli x15 x15 2
+    10268:        00f707b3        add x15 x14 x15
+    1026c:        0007a703        lw x14 0 x15
+    10270:        fec42783        lw x15 -20 x8
+    10274:        00f74733        xor x14 x14 x15
+    10278:        c5418693        addi x13 x3 -940
+    1027c:        fe442783        lw x15 -28 x8
+    10280:        00279793        slli x15 x15 2
+    10284:        00f687b3        add x15 x13 x15
+    10288:        00e7a023        sw x14 0 x15
+                                                # --- C 27: for (…) — 2. geçiş (şifrele)
+    1028c:        fe442783        lw x15 -28 x8
+    10290:        00178793        addi x15 x15 1
+    10294:        fef42223        sw x15 -28 x8
+    10298:        fe442703        lw x14 -28 x8
+    1029c:        02d00793        addi x15 x0 45
+    102a0:        fae7dee3        bge x15 x14 -68
+                                                # --- C 29: unsigned int c = 0;
+    102a4:        fe042023        sw x0 -32 x8
+                                                # --- C 30: for (…) — 3. geçiş (checksum)
+    102a8:        fe042223        sw x0 -28 x8
+    102ac:        0380006f        jal x0 56
+                                                # --- C 31: c = rotl1(c) + (unsigned int)msg[i];
+    102b0:        fe042503        lw x10 -32 x8
+    102b4:        ecdff0ef        jal x1 -308 <rotl1>
+    102b8:        00050693        addi x13 x10 0
+    102bc:        c5418713        addi x14 x3 -940
+    102c0:        fe442783        lw x15 -28 x8
+    102c4:        00279793        slli x15 x15 2
+    102c8:        00f707b3        add x15 x14 x15
+    102cc:        0007a783        lw x15 0 x15
+    102d0:        00f687b3        add x15 x13 x15
+    102d4:        fef42023        sw x15 -32 x8
+                                                # --- C 30: for (…) — 3. geçiş (checksum)
+    102d8:        fe442783        lw x15 -28 x8
+    102dc:        00178793        addi x15 x15 1
+    102e0:        fef42223        sw x15 -28 x8
+    102e4:        fe442703        lw x14 -28 x8
+    102e8:        02d00793        addi x15 x0 45
+    102ec:        fce7d2e3        bge x15 x14 -60
+                                                # --- C 32: checksum = c;
+    102f0:        fe042703        lw x14 -32 x8
+    102f4:        d0e1a623        sw x14 -756 x3
+                                                # --- C 33: for (…) — 4. geçiş (çöz)
+    102f8:        fe042223        sw x0 -28 x8
+    102fc:        0400006f        jal x0 64
+                                                # --- C 34: msg[i] = msg[i] ^ key;
+    10300:        c5418713        addi x14 x3 -940
+    10304:        fe442783        lw x15 -28 x8
+    10308:        00279793        slli x15 x15 2
+    1030c:        00f707b3        add x15 x14 x15
+    10310:        0007a703        lw x14 0 x15
+    10314:        fec42783        lw x15 -20 x8
+    10318:        00f74733        xor x14 x14 x15
+    1031c:        c5418693        addi x13 x3 -940
+    10320:        fe442783        lw x15 -28 x8
+    10324:        00279793        slli x15 x15 2
+    10328:        00f687b3        add x15 x13 x15
+    1032c:        00e7a023        sw x14 0 x15
+                                                # --- C 33: for (…) — 4. geçiş (çöz)
+    10330:        fe442783        lw x15 -28 x8
+    10334:        00178793        addi x15 x15 1
+    10338:        fef42223        sw x15 -28 x8
+    1033c:        fe442703        lw x14 -28 x8
+    10340:        02d00793        addi x15 x0 45
+    10344:        fae7dee3        bge x15 x14 -68
+                                                # --- C 35: x = SID;
+    10348:        fdc42783        lw x15 -36 x8
+    1034c:        fef42423        sw x15 -24 x8
+                                                # --- C 36: decrypt_ok = 1;
+    10350:        00100713        addi x14 x0 1
+    10354:        c4e1a823        sw x14 -944 x3
+                                                # --- C 37: for (…) — 5. geçiş (karşılaştır)
+    10358:        fe042223        sw x0 -28 x8
+    1035c:        04c0006f        jal x0 76
+                                                # --- C 38: x = lcg_next(x);
+    10360:        fe842503        lw x10 -24 x8
+    10364:        de1ff0ef        jal x1 -544 <lcg_next>
+    10368:        fea42423        sw x10 -24 x8
+                                                # --- C 39: if (msg[i] != …)
+    1036c:        c5418713        addi x14 x3 -940
+    10370:        fe442783        lw x15 -28 x8
+    10374:        00279793        slli x15 x15 2
+    10378:        00f707b3        add x15 x14 x15
+    1037c:        0007a703        lw x14 0 x15
+    10380:        fe842783        lw x15 -24 x8
+    10384:        0107d693        srli x13 x15 16
+    10388:        01a00793        addi x15 x0 26
+    1038c:        02f6f7b3        remu x15 x13 x15
+    10390:        04178793        addi x15 x15 65
+    10394:        00f70463        beq x14 x15 8
+                                                # --- C 40: decrypt_ok = 0;
+    10398:        c401a823        sw x0 -944 x3
+                                                # --- C 37: for (…) — 5. geçiş (karşılaştır)
+    1039c:        fe442783        lw x15 -28 x8
+    103a0:        00178793        addi x15 x15 1
+    103a4:        fef42223        sw x15 -28 x8
+    103a8:        fe442703        lw x14 -28 x8
+    103ac:        02d00793        addi x15 x0 45
+    103b0:        fae7d8e3        bge x15 x14 -80
+                                                # --- C 42: return 0;
+    103b4:        00000793        addi x15 x0 0
+    103b8:        00078513        addi x10 x15 0
+                                                # --- C 43: }
+    103bc:        02c12083        lw x1 44 x2
+    103c0:        02812403        lw x8 40 x2
+    103c4:        03010113        addi x2 x2 48
+    103c8:        00008067        jalr x0 x1 0
